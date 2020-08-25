@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../home_page.dart';
+import '../../utils/auth_utils.dart';
 
 class LoginPageBody extends StatefulWidget {
   @override
@@ -8,42 +10,61 @@ class LoginPageBody extends StatefulWidget {
 }
 
 class _LoginPageBodyState extends State<LoginPageBody> {
-  TextEditingController controller = TextEditingController();
+  FirebaseUser user;
 
   @override
   Widget build(BuildContext buildContext) {
     void buttonPressed() {
-      Navigator.push(
-          buildContext,
-          MaterialPageRoute(
-            builder: (context) => HomePage(controller.text),
-          ));
+      signInWithGoogle().then((user) {
+        print(user);
+        print(user.phoneNumber);
+        print(user.displayName);
+        print(user.email);
+        print(user.metadata);
+        print(user.hashCode);
+        print(user.isEmailVerified);
+        print(user.photoUrl);
+        print(user.providerId);
+        print(user.uid);
+        Navigator.push(
+            buildContext,
+            MaterialPageRoute(
+              builder: (context) => HomePage(user.displayName),
+            ));
+      }).catchError((error) => print(error));
+    }
+
+    Widget magicButton() {
+      return OutlineButton(
+        onPressed: buttonPressed,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image(image: AssetImage('assets/images/google_logo.png')),
+              Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text('Sign in Bruh!',
+                      style: TextStyle(
+                        color: Colors.yellow,
+                        fontSize: 25,
+                      ))),
+            ],
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(45),
+        ),
+        splashColor: Colors.grey,
+        borderSide: BorderSide(color: Colors.grey),
+      );
     }
 
     return Align(
       alignment: Alignment.center,
-      child: Padding(
-          padding: EdgeInsets.all(10),
-          child: TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                Icons.person,
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 5,
-                  color: Colors.black,
-                ),
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(Icons.done),
-                onPressed: buttonPressed,
-                splashColor: Colors.lightBlue,
-              ),
-              labelText: "Enter your username",
-            ),
-            controller: this.controller,
-          )),
+      child: magicButton(),
     );
   }
 }

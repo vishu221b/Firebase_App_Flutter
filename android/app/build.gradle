@@ -41,7 +41,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.firebase_blog"
         // minSdkVersion 16
-        minSdkVersion 23 // Making this for firebase, default was 16
+        minSdkVersion 21 // Making this for firebase, default was 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
